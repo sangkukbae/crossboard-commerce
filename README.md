@@ -2,6 +2,15 @@
 
 한·중 커머스 풀스택 유지·운영 공고에 맞춘 수주형 MVP 데모입니다. 완전한 상용 구현보다, 기존 담당자 퇴사 후 바로 운영을 인수할 수 있음을 보여주는 핵심 흐름에 집중했습니다.
 
+## Modern Storefront
+<img width="457" height="777" alt="스크린샷 2026-06-19 16 24 53" src="https://github.com/user-attachments/assets/c4207141-6b90-467e-87e6-965afca932e0" />
+
+## Legacy Storefront
+<img width="745" height="759" alt="스크린샷 2026-06-19 16 26 08" src="https://github.com/user-attachments/assets/d9ebbd19-8d41-4b96-8140-00529004181e" />
+
+## Mobil Commerce
+<img width="161" height="766" alt="스크린샷 2026-06-19 16 25 29" src="https://github.com/user-attachments/assets/269d5626-77a7-43b3-846f-7c544045fd9a" />
+
 ## 빠른 실행
 
 ```bash
@@ -65,11 +74,3 @@ curl -s http://localhost:8000/api/admin/dashboard \
 - Toss/Kakao 실 키 주입 후 외부 API 검증 활성화
 - Sentry/Slack Webhook 환경 변수 설정 후 장애 알림 연결
 - Supervisor/Deployer 배포 스크립트 추가
-
-## Vercel 참고
-
-현재 Vercel CLI는 설치되어 있지 않습니다. 배포 로그, 환경 변수 동기화, Preview 배포 자동화를 쓰려면 아래 설치가 필요합니다.
-
-```bash
-npm i -g vercel
-```
