@@ -1,0 +1,7 @@
+FROM php:8.2-cli
+
+WORKDIR /app
+COPY . /app
+
+EXPOSE 8001
+CMD ["php", "-S", "0.0.0.0:8001", "-t", "public"]

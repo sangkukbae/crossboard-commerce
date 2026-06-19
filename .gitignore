@@ -1,0 +1,8 @@
+.env
+node_modules/
+.next/
+__pycache__/
+.pytest_cache/
+ml-service/.venv/
+api-server/storage/state.json
+vendor/

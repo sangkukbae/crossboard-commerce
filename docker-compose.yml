@@ -1,0 +1,78 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: crossborder
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD:-secret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  api-server:
+    build: ./api-server
+    environment:
+      CNY_KRW_RATE: ${CNY_KRW_RATE:-190}
+      MARGIN_RATE: ${MARGIN_RATE:-0.28}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      ML_SERVICE_URL: http://ml-service:8100
+    ports:
+      - "8000:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ml-service:
+        condition: service_started
+
+  legacy-storefront:
+    build: ./legacy-storefront
+    environment:
+      API_URL: http://localhost:8000
+    ports:
+      - "8001:8001"
+    depends_on:
+      - api-server
+
+  modern-storefront:
+    build: ./modern-storefront
+    environment:
+      API_INTERNAL_URL: http://api-server:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-server
+
+  mobile-commerce:
+    build: ./mobile-commerce
+    environment:
+      API_INTERNAL_URL: http://api-server:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-local-demo-secret}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID:-}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET:-}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api-server
+
+  ml-service:
+    build: ./ml-service
+    ports:
+      - "8100:8100"
